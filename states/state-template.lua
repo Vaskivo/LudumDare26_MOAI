@@ -29,7 +29,12 @@ end
 
 
 function state.onInput(self)
-	-- I think I'll manage the inpu myself
+	-- I think I'll manage the input myself
+end
+
+
+function state.onUpdate(self)
+
 end
 
 

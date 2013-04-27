@@ -1,0 +1,25 @@
+MINIMALISM
+
+
+The game will be a subversion of games. This way, it will start with some of the 
+traditional elements of a game, but shed them away. Mainly, it will remove them
+only if the player never used them. This reinforces their futility.
+
+
+Basic game: - exploration zelda like.
+
+elements:
+	- player
+	- enemy
+	- pickups
+		- sword
+		- armor
+		- health/powerup
+
+
+
+layer 1
+	- character
+	- enemies
+	- coins
+	- vida, pontos, etc
