@@ -38,7 +38,7 @@ function move(self, x, y)
 	end
 	local currX, currY = self.my_body:getPosition ()
 	self.my_body:setTransform (currX + x, currY + y)
-	self.my_body:setAwake (true)
+	--self.my_body:setAwake (true)
 end
 
 

@@ -28,6 +28,9 @@ function new(box2d_world)
 
 	-- attributes
 	prop.lives = 3
+	prop.touchedEnemy = false
+	prop.touchedBlock = false
+	prop.touchedGold = false
 
 	-- methods
 	prop.loseLife = loseLife
@@ -51,8 +54,10 @@ function playerCollisionHandler(phase, fix_a, fix_b, arbiter)
 
 	if phase == MOAIBox2DArbiter.BEGIN then
 		if other.gameType == 'block' then
-			other.my_body:setActive (true)
-			player.my_body:setActive (true)
+			print("block IN")
+			--other.my_body:setActive (true)
+			--player.my_body:setActive (true)
+			--[[
 			local myX, myY = player.my_body:getPosition ()
 			local otherX, otherY = other.my_body:getPosition ()
 	
@@ -66,11 +71,37 @@ function playerCollisionHandler(phase, fix_a, fix_b, arbiter)
 			elseif otherX - myX < -30 then -- is on left
 				player.nullifier.left = 0
 			end
+			]]
+			local block_timer = MOAITimer.new ()
+			block_timer:setSpan (0.01)
+			block_timer:setListener (MOAITimer.EVENT_STOP,
+				function ()
+					other:destroyBlock ()
+				end
+				)
+			block_timer:start ()
+
+			if player.touchedBlock == false then
+				player.touchedBlock = true
+				player.onTouchBlock ()
+			end
+		elseif other.gameType == "enemy" then
+			player:loseLife ()
+			if player.touchedEnemy == false then
+				player.touchedEnemy = true
+				player.onTouchEnemy ()
+			end
+		elseif other.gameType == "gold" then
+			if player.touchedGold == false then
+				player.touchedGold = true
+				player.onTouchGold ()
+			end
 		end
 	end
-
+	--[[
 	if phase == MOAIBox2DArbiter.END then
 		if other.gameType == 'block' then
+			print("block OUT")
 			local myX, myY = player.my_body:getPosition ()
 			local otherX, otherY = other.my_body:getPosition ()
 			if otherY - myY > 30 then -- is on top
@@ -83,8 +114,6 @@ function playerCollisionHandler(phase, fix_a, fix_b, arbiter)
 			elseif otherX - myX < -30 then -- is on left
 				player.nullifier.left = 1
 			end
-		elseif other.gameType == "enemy" then
-			player:loseLife ()
 		end
-	end
+	end ]]
 end
