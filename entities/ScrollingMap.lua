@@ -2,7 +2,7 @@ module ("ScrollingMap", package.seeall)
 
 
 green_tile_deck = MOAITileDeck2D.new ()
-green_tile_deck:setTexture (ResourceManager.getImage ("tiles-sheet-test.png"))
+green_tile_deck:setTexture (ResourceManager.getImage ("tiles-sheet-test2.png"))
 green_tile_deck:setSize (3, 1)
 
 
@@ -38,6 +38,7 @@ function new(x_size, y_size)
 	prop.fillUp = fillUp
 	prop.fillDown = fillDown
 	prop.changeFill = changeFill
+	prop.getFillTile = getFillTile
 
 	return prop
 end
@@ -49,36 +50,36 @@ function moveMap(self, x, y, forward)
 	if mapX > self.x_limit + 64 then -- going left
 		mapX = mapX - 64
 		self:shiftRight ()
-		if forward then
+		--if forward then
 			self:fillLeft (self.current_fill)
-		else
-			self:fillLeft (self.old_fill)
-		end
+		--else
+		--	self:fillLeft (self.old_fill)
+		--end
 	elseif mapX < self.x_limit - 64 then -- going right
 		mapX = mapX + 64
 		self:shiftLeft ()
-		if forward then
+		--if forward then
 			self:fillRight (self.current_fill)
-		else
-			self:fillRight (self.old_fill)
-		end
+		--else
+		--	self:fillRight (self.old_fill)
+		--end
 	end
 	if mapY > self.y_limit + 64 then  -- going down
 		mapY = mapY - 64
 		self:shiftUp ()
-		if forward then
+		--if forward then
 			self:fillDown (self.current_fill)
-		else
-			self:fillDown (self.old_fill)
-		end
+		--else
+		--	self:fillDown (self.old_fill)
+		--end
 	elseif mapY < self.y_limit - 64 then -- going up
 		mapY = mapY + 64
 		self:shiftDown ()
-		if forward then
+		--if forward then
 			self:fillUp (self.current_fill)
-		else
-			self:fillUp (self.old_fill)
-		end
+		--else
+		--	self:fillUp (self.old_fill)
+		--end
 	end
 
 	self:setLoc (mapX, mapY)
@@ -93,6 +94,25 @@ function changeFill(self, fill)
 		self.old_fill = self.current_fill
 		self.current_fill = fill
 	end
+	--print('fill', fill)
+end
+
+function getFillTile(self, distance, forward)
+	-- gonna be ugly :/
+	if forward then
+		if distance < 20 then
+			return 1
+		elseif distance < 40 then
+			return 2
+		end
+	else
+		if distance < 30 then
+			return 1
+		elseif distance < 45 then
+			return 2
+		end
+	end
+	return 3
 end
 
 
