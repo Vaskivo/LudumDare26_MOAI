@@ -7,11 +7,18 @@ player_deck:setTexture (ResourceManager.getImage ("player.png"))
 player_deck:setRect (-32, -32, 32, 32)
 --player_deck:setRect (-16, -16, 16, 16)
 
+player_nDeck = MOAITileDeck2D.new ()
+player_nDeck:setTexture (ResourceManager.getImage ("player-sprites.png"))
+player_nDeck:setSize (6, 1)
+player_nDeck:setRect (-40, -40, 40, 40)
+
 
 function new(box2d_world)
 	local prop = MOAIProp2D.new ()
 	prop.gameType = "player"
-	prop:setDeck (player_deck)
+	prop:setDeck (player_nDeck)
+	prop:setIndex (1)
+	prop.my_deck_size = 40
 
 	-- physics
 	local body = box2d_world:addBody (MOAIBox2DBody.STATIC)
@@ -31,9 +38,17 @@ function new(box2d_world)
 	prop.touchedEnemy = false
 	prop.touchedBlock = false
 	prop.touchedGold = false
+	prop.actual_level = 1
+
+	prop.direction_x = 0
+	prop.direction_y = 1
 
 	-- methods
 	prop.loseLife = loseLife
+	prop.changeLevel = changeLevel
+	prop.rotateTo = rotateTo
+	prop.resizeDeck = resizeDeck
+	prop.resetDeck = resetDeck
 
 	return prop
 end
@@ -41,9 +56,43 @@ end
 
 function loseLife(self)
 	self.lives = self.lives - 1
-	print ("lost Life")
+	--print ("lost Life")
 end
 
+function changeLevel (self, level)
+	if level == self.actual_level then
+		return
+	end
+	--print("gonna change player sprite")
+	self.actual_level = level
+	self:setIndex (level)
+end
+
+function rotateTo(self, x, y)
+	--print(x, y)
+	local angle = util.vectorAngle (self.direction_x, self.direction_y, x, y)
+	if x > 0 then
+		angle = -angle
+	end
+	angle = math.deg (angle)
+	self:setRot (angle)
+end
+
+
+function resizeDeck(self)
+	if self.my_deck_size > 400 then
+		player_nDeck:setRect (-40, 40, 40, 40)
+		self.gameOver ()
+	end
+	self.my_deck_size = self.my_deck_size * 1.5
+	player_nDeck:setRect (- self.my_deck_size, -self.my_deck_size, self.my_deck_size, self.my_deck_size)
+	self:setDeck (player_nDeck)
+end
+
+function resetDeck(self)
+	player_nDeck:setRect (-40, -40, 40, 40)
+	self:setDeck (player_nDeck)
+end
 
 
 -- collision handler
@@ -54,7 +103,7 @@ function playerCollisionHandler(phase, fix_a, fix_b, arbiter)
 
 	if phase == MOAIBox2DArbiter.BEGIN then
 		if other.gameType == 'block' then
-			print("block IN")
+			--print("block IN")
 			--other.my_body:setActive (true)
 			--player.my_body:setActive (true)
 			--[[

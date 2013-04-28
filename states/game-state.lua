@@ -41,13 +41,14 @@ state.record = { sword = false,
 				 gold = false}
 
 
+
 state.stuff_table = nil
 state.iteration_to_delete = 0
 
 
 -- stuff for the random
 state.random_total = 1000
-state.random_limit = 980
+state.random_limit = 950
 state.spawn_block = true
 state.spawn_enemy = true
 state.spawn_gold = true
@@ -57,15 +58,17 @@ state.spawn_gold = true
 
 ------ StateManager functions ------
 function state.onFocus(self)
+	self:setUpShit ()
+	self.player:resetDeck ()
 	self.layerTable[1][1]:setClearColor (0,0,0,1)
 	MOAIInputMgr.device.pointer:setCallback (self:getPointerCallback ())
 	MOAIInputMgr.device.mouseLeft:setCallback (self:getClickCallback ())
 
 
-
 	------------------------------------
 	--- FOR TESTING PURPOSES!!!!! ------
 	------------------------------------
+	--[[
 	MOAIInputMgr.device.keyboard:setCallback ( 
 	    function (key, down)
 	        if down == true then
@@ -80,11 +83,12 @@ function state.onFocus(self)
 	        	end
 	        end
 	    end
-	    )
+	    )]]
 end
 
 
 function state.onLoad(self)
+	--self:setUpShit ()
 	self.layerTable = {}
 
 	local main_layer = MOAILayer2D.new ()
@@ -92,6 +96,9 @@ function state.onLoad(self)
 
 	local background_layer = MOAILayer2D.new ()
 	background_layer:setViewport (viewport)
+
+	local gui_layer = MOAILayer2D.new ()
+	gui_layer:setViewport (viewport)
 
 	-- partitions. I hate these...
 	self.main_partition = MOAIPartition.new ()
@@ -105,7 +112,7 @@ function state.onLoad(self)
 	main_layer:setBox2DWorld (box2d_world) --physics exist in the main layer
 
 
-	self.layerTable[1] = {background_layer, main_layer}
+	self.layerTable[1] = {background_layer, main_layer, gui_layer}
 
 	self.player = Player.new (box2d_world)
 	self.player:setLoc (0, 0)
@@ -115,11 +122,11 @@ function state.onLoad(self)
 	self.player.onTouchEnemy = self:playerTouchedEnemy ()
 	self.player.onTouchBlock = self:playerTouchedBlock ()
 	self.player.onTouchGold = self:playerTouchedGold ()
+	self.player.gameOver = self:finishGame ()
 
 	self.map = ScrollingMap.new (15, 13)
 	background_layer:insertProp (self.map)
 
-	self.stuff_table = {}
 	self.box2d_world = box2d_world
 
 end
@@ -133,6 +140,7 @@ function state.onUpdate(self)
 	end
 	if self.mouse_down then
 		--print (self.nullifier.up)
+		--[[
 		if (self.moving_y < 0) and (self.nullifier.up == 0) then
 			self.moving_y = 0
 		end
@@ -145,21 +153,25 @@ function state.onUpdate(self)
 		if (self.moving_x > 0) and (self.nullifier.left == 0) then
 			self.moving_x = 0
 		end
+		]]
+		
 
 		self.player_x = self.player_x + self.moving_x
 		self.player_y = self.player_y + self.moving_y
 		local distance = util.vectorNorm (self.player_x, 
 										  self.player_y)
 		distance = distance / 64
-		--print (distance, (distance > self.player_distance), self.map:getFillTile (distance))
+		--print (distance)
 		self.map:changeFill (self.map:getFillTile (distance,(distance > self.player_distance)))
 		self.map:moveMap (self.moving_x, self.moving_y)
 		self.player_distance = distance
-
+		self:changeLevel (distance)
+		self.player:changeLevel (self.player_level)
 		--move stuff
 		for i, j in pairs (self.stuff_table) do
 			j:move (self.moving_x, self.moving_y)
 		end
+		self.player:rotateTo (-self.moving_x, -self.moving_y)
 
 		-- add stuff to the map
 		if math.random (state.random_total) > state.random_limit then
@@ -202,33 +214,94 @@ end
 
 
 function state.onUnload(self)
+	
 
+	for i, layerSet in ipairs ( self.layerTable ) do
+		
+		for j, layer in ipairs ( layerSet ) do
+		
+			layer = nil
+		end
+	end
+	
+	self.layerTable = nil
+	self.main_partition = nil
+	self.gui_partition = nil
 end
 
 
 function state.onLoseFocus(self)
+	MOAIInputMgr.device.pointer:setCallback (nil)
+	MOAIInputMgr.device.mouseLeft:setCallback (nil)
 
+	for i, j in pairs (self.stuff_table) do
+		self.main_partition:removeProp (j)
+		if j.my_body then
+			j.my_body:destroy ()
+			j.my_body = nil
+		end
+		j = nil
+	end
+	self.main_partition:removeProp (self.player)
+	self.main_partition = nil
+	self.player.my_body:destroy ()
+	self.player.my_body = nil
+	self.player = nil
 end
 
 
 
 -- Functionality implementation
+function state.setUpShit(self)
+	state.player_level = 1
+	state.player_x = 0
+	state.player_y = 0
+	state.player_distance = 0
+	state.speed = 5
+	state.moving_x = 0
+	state.moving_y = 0
+	state.nullifier = { up = 1,
+						down = 1,
+						left = 1,
+						right = 1}
+
+	state.record = { sword = false,
+					 enemy = false,
+					 block = false,
+					 gold = false}
+
+
+
+	state.stuff_table = {}
+	state.iteration_to_delete = 0
+
+
+	-- stuff for the random
+	state.random_total = 1000
+	state.random_limit = 950
+	state.spawn_block = true
+	state.spawn_enemy = true
+	state.spawn_gold = true
+end
+
+
+
 function state.createBlock(self, x, y) 
-	local block = Block.new (self.box2d_world, x, y)
+	local block = Block.new (self.box2d_world, x, y, self.player_level)
 	self.main_partition:insertProp (block)
 	table.insert (self.stuff_table, block)
 	return block
 end
 
 function state.createEnemy (self, x, y)
-	local enemy = Enemy.new (self.box2d_world, x, y)
+	local enemy = Enemy.new (self.box2d_world, x, y, self.player_level)
 	self.main_partition:insertProp (enemy)
 	table.insert (self.stuff_table, enemy)
 	return enemy
 end
 
 function state.createGold (self, x, y)
-	local gold = Gold.new (self.box2d_world, x, y)
+	local gold = Gold.new (self.box2d_world, x, y, self.player_level)
 	self.main_partition:insertProp (gold)
 	table.insert (self.stuff_table, gold)
 	return gold
@@ -258,7 +331,7 @@ function state.playerTouchedEnemy(self)
 			return
 		end
 		self.record.enemy = true
-		Quotes.drawText (self.layerTable[1][2], Quotes.ENEMY)
+		Quotes.drawText (self.layerTable[1][3], Quotes.ENEMY)
 	end
 	return f
 end
@@ -269,7 +342,7 @@ function state.playerTouchedBlock(self)
 			return
 		end
 		self.record.block = true
-		Quotes.drawText (self.layerTable[1][2], Quotes.BLOCK)
+		Quotes.drawText (self.layerTable[1][3], Quotes.BLOCK)
 	end
 	return f
 end
@@ -280,9 +353,80 @@ function state.playerTouchedGold(self)
 			return
 		end
 		self.record.gold = true
-		Quotes.drawText (self.layerTable[1][2], Quotes.GOLD)
+		Quotes.drawText (self.layerTable[1][3], Quotes.GOLD)
 	end
 	return f
+end
+
+function state.finishGame(self)
+	local function gameOver()
+		--print(self.record.gold, self.record.block, self.record.enemy)
+		if self.record.gold or self.record.block or self.record.enemy then
+			StateManager.swap ('states/bad-end.lua')
+		else
+			StateManager.swap ('states/good-end.lua')
+		end
+	end
+	return gameOver
+end
+
+
+function state.changeLevel (self, distance)
+	if distance < 26 then
+		self:setLevel (1)
+		self.player_level = 1
+	elseif distance < 46 then 
+		self:setLevel (2)
+	elseif distance < 66 then
+		self:setLevel (3)
+	elseif distance < 86 then
+		self:setLevel (4)
+	elseif distance < 106 then
+		self:setLevel (5)
+	else
+		self:setLevel (6)
+	end
+end
+
+function state.setLevel (self, level)
+	if self.player_level == level then
+		return
+	end
+	self.player_level = level
+	if level == 1 then
+		self.spawn_enemy = true
+		self.spawn_gold = true
+		self.spawn_block = true
+		-- show certain GUIs
+	elseif level == 2 then
+		self.spawn_enemy = true
+		self.spawn_gold = true
+		self.spawn_block = true
+		-- show certain GUIs
+	elseif level == 3 then
+		self.spawn_enemy = false
+		self.spawn_gold = true
+		self.spawn_block = true
+		-- show certain GUIs
+	elseif level == 4 then
+		self.spawn_enemy = false
+		self.spawn_gold = false
+		self.spawn_block = true
+		-- show certain GUIs
+	elseif level == 5 then
+
+		self.spawn_enemy = false
+		self.spawn_gold = false
+		self.spawn_block = false
+		-- show certain GUIs
+	elseif level == 6 then
+		self.spawn_enemy = false
+		self.spawn_gold = false
+		self.spawn_block = false
+		-- show certain GUIs
+	else
+		-- jump to end
+	end
 end
 
 
@@ -296,6 +440,9 @@ end
 -- Input Callbacks (maybe)
 function state.getPointerCallback(self)
 	function callback(x, y)
+		if self.player_level == 6 then
+			return
+		end
 		self.mouseX, self.mouseY = self.layerTable[1][2]:wndToWorld (x, y)
 		self.moving_x, self.moving_y = util.normalizeVector (self.mouseX, 
 															 self.mouseY, 
@@ -309,6 +456,12 @@ end
 function state.getClickCallback(self)
 	function callback(down)
 		if down then
+			if self.player_level >= 6 and self.player_distance > 112 then
+				--print ("resizing")
+				self.player:resizeDeck ()
+				return
+			end
+
 			local prop = self.main_partition:propForPoint (self.mouseX,
 														   self.mouseY)
 			if thisProp and thisProp.onClick then

@@ -129,9 +129,9 @@ function pop ( )
 	MOAISim.forceGarbageCollection ()
 	
 	-- do the new current state's onFocus
-	if type ( curState.onFocus ) == "function" then
-		curState:onFocus ( )
-	end
+	--if type ( curState.onFocus ) == "function" then
+	--	curState:onFocus ( )
+	--end
 end
 
 ----------------------------------------------------------------

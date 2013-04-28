@@ -4,12 +4,17 @@ gold_deck = MOAIGfxQuad2D.new ()
 gold_deck:setTexture (ResourceManager.getImage ("gold.png"))
 gold_deck:setRect (-16, -16, 16, 16)
 
+gold_nDeck = MOAITileDeck2D.new ()
+gold_nDeck:setTexture (ResourceManager.getImage ("gold-sprites.png"))
+gold_nDeck:setSize (4, 1)
+gold_nDeck:setRect (-16, -16, 16, 16)
 
 
-function new(box2d_world, x, y)
+function new(box2d_world, x, y, level)
 	local prop = MOAIProp2D.new ()
 	prop.gameType = "gold"
-	prop:setDeck (gold_deck)
+	prop:setDeck (gold_nDeck)
+	prop:setIndex (level or 1)
 
 	-- physics
 	local body = box2d_world:addBody (MOAIBox2DBody.DYNAMIC)

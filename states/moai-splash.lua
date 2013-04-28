@@ -8,23 +8,23 @@ splash.layerTable = nil
 
 -- constants
 splash.duration = 2 -- seconds
-splash.nextState = "states/randomball-state.lua"
+splash.nextState = "states/title.lua"
 
 
 function splash.onFocus(self)
 	splash.layerTable[1][1]:setClearColor (0, 0, 0, 1)
 
-	--[[
+	
 	self.timer = MOAITimer.new ()
 	self.timer:setSpan (self.duration)
 	self.timer:setListener (MOAITimer.EVENT_STOP, 
 		function ()
-			print (StateManager.getCurState ())
-			StateManager.swap (self.nextState)
+			--print (StateManager.getCurState ())
+			StateManager.push (self.nextState)
 		end
 		)
 	self.timer:start ()
-	]]--
+	
 end
 
  function splash.onLoad(self)

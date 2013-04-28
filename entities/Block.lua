@@ -5,13 +5,18 @@ block_deck:setTexture (ResourceManager.getImage ("block.png"))
 block_deck:setRect (-32, -32, 32, 32)
 --block_deck:setRect (-16, -16, 16, 16)
 
+block_nDeck = MOAITileDeck2D.new ()
+block_nDeck:setTexture (ResourceManager.getImage ("block-sprites2.png"))
+block_nDeck:setSize (5, 1)
+block_nDeck:setRect (-32, -32, 32, 32)
 
 
 
-function new(box2d_world, x, y)
+function new(box2d_world, x, y, level)
 	local prop = MOAIProp2D.new ()
 	prop.gameType = 'block'
-	prop:setDeck (block_deck)
+	prop:setDeck (block_nDeck)
+	prop:setIndex (level or 1)
 	prop:setLoc (0, 0)
 
 	-- physics

@@ -16,3 +16,7 @@ function normalizeVector (x, y, size)
 	end
 	return x / norm, y / norm
 end
+
+function vectorAngle(v1, v2, u1, u2)
+	return math.acos ( (v1*u1 + v2*u2) / (vectorNorm (v1, v2) * vectorNorm (u1, u2) ) )	
+end

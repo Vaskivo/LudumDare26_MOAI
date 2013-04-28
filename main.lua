@@ -9,7 +9,7 @@ viewport:setSize (SCREEN_WIDTH, SCREEN_HEIGHT)
 viewport:setScale (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 
-JUMP_TO = "states/game-state.lua"
+JUMP_TO = nil--"states/good-end.lua"     --"states/game-state.lua"
 ----------------------------------------------------------------
 if 	JUMP_TO	then
 	StateManager.push ( JUMP_TO )

@@ -2,9 +2,10 @@ module ("ScrollingMap", package.seeall)
 
 
 green_tile_deck = MOAITileDeck2D.new ()
-green_tile_deck:setTexture (ResourceManager.getImage ("tiles-sheet-test2.png"))
-green_tile_deck:setSize (3, 1)
-
+--green_tile_deck:setTexture (ResourceManager.getImage ("tiles-sheet-test2.png"))
+--green_tile_deck:setSize (3, 1)
+green_tile_deck:setTexture (ResourceManager.getImage ("tiles.png"))
+green_tile_deck:setSize (6, 1)
 
 function new(x_size, y_size) 
 	local map = MOAIGrid.new ()
@@ -104,6 +105,14 @@ function getFillTile(self, distance, forward)
 			return 1
 		elseif distance < 40 then
 			return 2
+		elseif distance < 60 then
+			return 3
+		elseif distance < 80 then
+			return 4
+		elseif distance < 100 then
+			return 5
+		else 
+			return 6
 		end
 	else
 		if distance < 30 then

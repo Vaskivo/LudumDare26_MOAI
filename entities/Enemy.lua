@@ -5,20 +5,26 @@ block_deck:setTexture (ResourceManager.getImage ("enemy.png"))
 block_deck:setRect (-32, -32, 32, 32)
 --block_deck:setRect (-16, -16, 16, 16)
 
+enemy_nDeck = MOAITileDeck2D.new ()
+enemy_nDeck:setTexture (ResourceManager.getImage ("enemy-sprites2.png"))
+enemy_nDeck:setSize (5, 1)
+enemy_nDeck:setRect (-32, -32, 32, 32)
+
 enemy_speed = 2
 
 
 
-function new(box2d_world, x, y)
+function new(box2d_world, x, y, level)
 	local prop = MOAIProp2D.new ()
 	prop.gameType = 'enemy'
-	prop:setDeck (block_deck)
+	prop:setDeck (enemy_nDeck)
+	prop:setIndex (level or 1)
 	prop:setLoc (0, 0)
 
 	-- physics
 	local body = box2d_world:addBody (MOAIBox2DBody.DYNAMIC)
 	
-	local fixture = body:addRect (-32, -32, 32, 32)
+	local fixture = body:addCircle (0, 0, 30)
 	body:setTransform (x, y)
 	-- set collision handler
 	fixture:setCollisionHandler (enemyCollisionHandler, MOAIBox2DArbiter.BEGIN)
