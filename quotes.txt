@@ -6,6 +6,7 @@ non-essential forms, features or concepts"
 - Wikipedia
 
 
+-> Sword Pickup
 “The secret of happiness, you see, is not found in seeking more, but 
 in developing the capacity to enjoy less.”
 - Socrates
@@ -15,6 +16,7 @@ in developing the capacity to enjoy less.”
 - Lau Tzu
 
 
+-> Block collision
 “Be Content with what you have; rejoice in the way things are. When you 
 realize there is nothing lacking, the whole world belongs to you.”
 - Lau Tzu
@@ -41,11 +43,11 @@ there is nothing left to take away.”
 hungry for meaning, for the sense that we have figured out how to live so that our lives matter.”
 - Harold Kushner.
 
-
+-> Gold
 “You have succeeded in life when all you really want is only what you really need.”
 - Vernon Howard
 
-
+- Bad End
 “There is no greatness where there is not simplicity, goodness, and truth.”
 - Leo Tolstoy
 
@@ -55,6 +57,7 @@ experience and the last effort of genius.”
 - George Sand
 
 
+-> Kill enemy
 “Live simply so that others may simply live.”
 - Elizabeth Ann Seton
 
@@ -67,7 +70,7 @@ experience and the last effort of genius.”
 for the experience of being alive"
 - Joseph Campbel
 
-
+- Good End
 "It’s only after we’ve lost everything that we’re free to do anything."
 - Tyler Durden - Fight Club
 

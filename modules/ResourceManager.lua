@@ -12,7 +12,7 @@ ResourceManager.RES_PATH = './resources/'
 --                 images folder path
 ResourceManager.IMAGES_PATH = ResourceManager.RES_PATH .. 'images/'
 --                  fonts folder path
-ResourceManager.FONTS_FOLDER = ResourceManager.RES_PATH .. 'fonts/'
+ResourceManager.FONT_PATH = ResourceManager.RES_PATH .. 'fonts/'
 
 local charCode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 _.,?!;:()[]{}+-/*^@#$%&\\\'"<>`|'
 
@@ -54,13 +54,12 @@ function ResourceManager.getFont(filename, size)
 		-- instance exists
 		return fntCache[filename .. size]
 	end
-
 	-- make new font
 	local fnt = MOAIFont.new ()
 	-- load file
 	fnt:load (ResourceManager.FONT_PATH .. filename)
 	-- preload charcode and size
-	fnt:preloadGlyphs (charcode, size, 72)
+	fnt:preloadGlyphs (charCode, size, 72)
 	-- add to cache
 	fntCache[filename .. size] = fnt
 

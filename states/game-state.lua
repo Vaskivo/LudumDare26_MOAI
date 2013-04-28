@@ -3,6 +3,7 @@ require ("entities/Block")
 require ("entities/Enemy")
 require ("entities/Gold")
 require ("entities/ScrollingMap")
+require ("modules/Quotes")
 require ("modules/util")
 
 local state = {}
@@ -34,6 +35,11 @@ state.nullifier = { up = 1,
 					left = 1,
 					right = 1}
 
+state.record = { sword = false,
+				 enemy = false,
+				 block = false,
+				 gold = false}
+
 
 state.stuff_table = nil
 state.iteration_to_delete = 0
@@ -60,7 +66,21 @@ function state.onFocus(self)
 	------------------------------------
 	--- FOR TESTING PURPOSES!!!!! ------
 	------------------------------------
-	
+	MOAIInputMgr.device.keyboard:setCallback ( 
+	    function (key, down)
+	        if down == true then
+	        	if key == 114 then
+	        		for i, j in pairs (self.stuff_table) do
+	        			j.my_body:destroy ()
+	        			j.my_body = nil
+	        			self.layerTable[1][2]:removeProp (j)
+	        			j = nil
+	        		end
+	        		self.stuff_table = {}
+	        	end
+	        end
+	    end
+	    )
 end
 
 
@@ -92,6 +112,9 @@ function state.onLoad(self)
 	self.main_partition:insertProp (self.player)
 
 	self.player.nullifier = self.nullifier
+	self.player.onTouchEnemy = self:playerTouchedEnemy ()
+	self.player.onTouchBlock = self:playerTouchedBlock ()
+	self.player.onTouchGold = self:playerTouchedGold ()
 
 	self.map = ScrollingMap.new (15, 13)
 	background_layer:insertProp (self.map)
@@ -192,22 +215,21 @@ end
 -- Functionality implementation
 function state.createBlock(self, x, y) 
 	local block = Block.new (self.box2d_world, x, y)
-	self.layerTable[1][2]:insertProp (block)
+	self.main_partition:insertProp (block)
 	table.insert (self.stuff_table, block)
 	return block
 end
 
 function state.createEnemy (self, x, y)
 	local enemy = Enemy.new (self.box2d_world, x, y)
-	self.layerTable[1][2]:insertProp (enemy)
+	self.main_partition:insertProp (enemy)
 	table.insert (self.stuff_table, enemy)
 	return enemy
 end
 
 function state.createGold (self, x, y)
-	print(self)
 	local gold = Gold.new (self.box2d_world, x, y)
-	self.layerTable[1][2]:insertProp (gold)
+	self.main_partition:insertProp (gold)
 	table.insert (self.stuff_table, gold)
 	return gold
 end
@@ -220,13 +242,47 @@ function state.deleteOldStuff(self)
 		if not (x < -600 or x > 600 or y < -500 or y > 500) then
 			table.insert (new_table, j)
 		else
-			self.layerTable[1][2]:removeProp (j)
+			self.main_partition:removeProp (j)
 			j.my_body:destroy ()
 			j.my_body = nil
 			j = nil
 		end
 	end
 	self.stuff_table = new_table
+end
+
+
+function state.playerTouchedEnemy(self)
+	function f()
+		if Quotes.ACTIVE == true then
+			return
+		end
+		self.record.enemy = true
+		Quotes.drawText (self.layerTable[1][2], Quotes.ENEMY)
+	end
+	return f
+end
+
+function state.playerTouchedBlock(self)
+	function f()
+		if Quotes.ACTIVE == true then
+			return
+		end
+		self.record.block = true
+		Quotes.drawText (self.layerTable[1][2], Quotes.BLOCK)
+	end
+	return f
+end
+
+function state.playerTouchedGold(self)
+	function f()
+		if Quotes.ACTIVE == true then
+			return
+		end
+		self.record.gold = true
+		Quotes.drawText (self.layerTable[1][2], Quotes.GOLD)
+	end
+	return f
 end
 
 
