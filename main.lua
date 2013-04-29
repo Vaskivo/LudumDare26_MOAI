@@ -4,7 +4,7 @@ require "modules/util"
 
 dofile ("platforms/windows.lua")
 
-MOAISim.openWindow ("Randomball", SCREEN_WIDTH, SCREEN_HEIGHT)
+MOAISim.openWindow ("Less is more", SCREEN_WIDTH, SCREEN_HEIGHT)
 
 viewport = MOAIViewport.new ()
 viewport:setSize (SCREEN_WIDTH, SCREEN_HEIGHT)
