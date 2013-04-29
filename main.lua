@@ -2,6 +2,8 @@ require "modules/ResourceManager"
 require "modules/StateManager"
 require "modules/util"
 
+dofile ("platforms/windows.lua")
+
 MOAISim.openWindow ("Randomball", SCREEN_WIDTH, SCREEN_HEIGHT)
 
 viewport = MOAIViewport.new ()

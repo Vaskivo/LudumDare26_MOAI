@@ -107,6 +107,7 @@ function state.onLoad(self)
 
 	-- set up Box2D
 	box2d_world = MOAIBox2DWorld.new ()
+	box2d_world:setDebugDrawEnabled	(false)
 	box2d_world:setUnitsToMeters (1/100)
 	box2d_world:start ()
 	main_layer:setBox2DWorld (box2d_world) --physics exist in the main layer
