@@ -2,9 +2,9 @@ module ("Player", package.seeall)
 
 
 
-player_deck = MOAIGfxQuad2D.new ()
-player_deck:setTexture (ResourceManager.getImage ("player.png"))
-player_deck:setRect (-32, -32, 32, 32)
+--player_deck = MOAIGfxQuad2D.new ()
+--player_deck:setTexture (ResourceManager.getImage ("player.png"))
+--player_deck:setRect (-32, -32, 32, 32)
 --player_deck:setRect (-16, -16, 16, 16)
 
 player_nDeck = MOAITileDeck2D.new ()

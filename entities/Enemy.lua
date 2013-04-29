@@ -1,8 +1,8 @@
 module ("Enemy", package.seeall)
 
-block_deck = MOAIGfxQuad2D.new ()
-block_deck:setTexture (ResourceManager.getImage ("enemy.png"))
-block_deck:setRect (-32, -32, 32, 32)
+--block_deck = MOAIGfxQuad2D.new ()
+--block_deck:setTexture (ResourceManager.getImage ("enemy.png"))
+--block_deck:setRect (-32, -32, 32, 32)
 --block_deck:setRect (-16, -16, 16, 16)
 
 enemy_nDeck = MOAITileDeck2D.new ()

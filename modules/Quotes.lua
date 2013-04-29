@@ -8,8 +8,8 @@ style:setSize (32)
 
 
 -- TEXT
-SWORD = "The secret of happiness, you see, is not found in seeking more, but in developing the capacity to enjoy less.\n - Socrates"
-BLOCK = "Be Content with what you have; rejoice in the way things are. When you realize there is nothing lacking, the whole world belongs to you.\n - Lau Tzu"
+BLOCK = "The secret of happiness, you see, is not found in seeking more, but in developing the capacity to enjoy less.\n - Socrates"
+SWORD = "Be Content with what you have; rejoice in the way things are. When you realize there is nothing lacking, the whole world belongs to you.\n - Lau Tzu"
 ENEMY = "Live simply so that others may simply live.\n - Elizabeth Ann Seton"
 GOLD = "You have succeeded in life when all you really want is only what you really need.\n - Vernon Howard"
 BAD_END = "There is no greatness where there is not simplicity, goodness, and truth.\n - Leo Tolstoi"

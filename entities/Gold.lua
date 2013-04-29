@@ -1,8 +1,8 @@
 module ("Gold", package.seeall)
 
-gold_deck = MOAIGfxQuad2D.new ()
-gold_deck:setTexture (ResourceManager.getImage ("gold.png"))
-gold_deck:setRect (-16, -16, 16, 16)
+--gold_deck = MOAIGfxQuad2D.new ()
+--gold_deck:setTexture (ResourceManager.getImage ("gold.png"))
+--gold_deck:setRect (-16, -16, 16, 16)
 
 gold_nDeck = MOAITileDeck2D.new ()
 gold_nDeck:setTexture (ResourceManager.getImage ("gold-sprites.png"))
