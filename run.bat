@@ -1,1 +1,1 @@
-%MOAI_BIN%\moai.exe "main.lua"
+bin\moai.exe "main.lua"
